@@ -3,8 +3,7 @@ CREATE TABLE "User" (
     username VARCHAR NOT NULL,
     password_hash VARCHAR NOT NULL,
     role VARCHAR NOT NULL,
-    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_type VARCHAR NOT NULL
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Restaurant" (

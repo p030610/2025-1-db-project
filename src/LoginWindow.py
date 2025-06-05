@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import (
 import psycopg2
 from UserWindow import UserWindow
 from ManagerWindow import ManagerWindow
-from 
 from DB_CONFIG import DB_CONFIG
 
 class LoginWindow(QWidget):
@@ -25,7 +24,6 @@ class LoginWindow(QWidget):
         self.login_btn = QPushButton("로그인")
         self.login_btn.clicked.connect(self.check_login)
 
-        layout.addWidget(QLabel("관리자 로그인"))
         layout.addWidget(self.username_input)
         layout.addWidget(self.password_input)
         layout.addWidget(self.login_btn)
@@ -41,7 +39,7 @@ class LoginWindow(QWidget):
             cursor = conn.cursor()
 
             cursor.execute("""
-                SELECT user_id, role, user_type FROM "User"
+                SELECT user_id, role FROM "User"
                 WHERE username = %s AND password_hash = %s
             """, (username, password))
 
@@ -49,9 +47,15 @@ class LoginWindow(QWidget):
             conn.close()
 
             if result:
-                user_id, role, user_type = result
-                QMessageBox.information(self, "성공", f"{role} 로그인 성공")
-                self.open_main_window(user_id, role, user_type)
+                user_id, role = result
+                role_text=""
+                if role=="admin":
+                    role_text="관리자"
+                elif role=="user":
+                    role_text="일반 사용자"
+                    
+                QMessageBox.information(self, "성공", f"{role_text} 로그인 성공")
+                self.open_main_window(user_id, role)
             else:
                 QMessageBox.warning(self, "실패", "아이디 또는 비밀번호가 틀렸습니다.")
 

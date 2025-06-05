@@ -7,7 +7,7 @@ import DatabaseManager
 class UserWindow(QMainWindow):
     def __init__(self, db: DatabaseManager):
         super().__init__()
-        self.setWindowTitle("위생업소 행정처분 관리 시스템 로그인")
+        self.setWindowTitle("위생업소 행정처분 관리 시스템-유저 메뉴")
         self.setGeometry(100, 100, 1000, 600)
 
         self.tabs = QTabWidget()

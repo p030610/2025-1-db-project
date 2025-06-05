@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox
 )
 from DatabaseManager import DatabaseManager
-from LoginWindow import LoginWindow
+from ui.LoginWindow import LoginWindow
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -5,12 +5,13 @@ from PyQt6.QtWidgets import (
 import psycopg2
 from UserWindow import UserWindow
 from ManagerWindow import ManagerWindow
+from LoginWindow import LoginWindow
 from DB_CONFIG import DB_CONFIG
 
-class LoginWindow(QWidget):
+class RegisterWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("로그인")
+        self.setWindowTitle("등록")
         self.setGeometry(100, 100, 300, 200)
 
         layout = QVBoxLayout()
@@ -21,16 +22,16 @@ class LoginWindow(QWidget):
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setPlaceholderText("비밀번호")
 
-        self.login_btn = QPushButton("로그인")
-        self.login_btn.clicked.connect(self.check_login)
+        self.register_complete_btn = QPushButton("등록 마치기")
+        self.register_complete_btn.clicked.connect(self.register)
 
         layout.addWidget(self.username_input)
         layout.addWidget(self.password_input)
-        layout.addWidget(self.login_btn)
+        layout.addWidget(self.register_complete_btn)
 
         self.setLayout(layout)
 
-    def check_login(self):
+    def add_new_user(self):
         username = self.username_input.text()
         password = self.password_input.text()
 
@@ -62,16 +63,10 @@ class LoginWindow(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "오류", str(e))
 
-    def open_main_window(self, user_id, role, user_type):
-        if user_type=="admin":
-            self.main = ManagerWindow(user_id, role)
-            self.main.show()
-            self.close()
-
-        elif user_type=="user":
-            self.main = UserWindow(user_id, role)
-            self.main.show()
-            self.close()
+    def open_login_window(self):
+        self.next = LoginWindow()
+        self.next.show()
+        self.close()
 
         
         

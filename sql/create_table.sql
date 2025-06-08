@@ -6,12 +6,13 @@ CREATE TABLE "User" (
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+/* 기본 구조만 형성 */
 CREATE TABLE "Restaurant" (
     manage_id VARCHAR PRIMARY KEY,
     permission_date DATE,
     store_name VARCHAR NOT NULL,
     address VARCHAR NOT NULL,
-    legacy_name VARCHAR
+    legacy_address VARCHAR
 );
 
 CREATE TABLE "UserEvaluation" (
@@ -27,8 +28,9 @@ CREATE TABLE "UserEvaluation" (
     FOREIGN KEY (store_id) REFERENCES "Restaurant"(manage_id)
 );
 
+/* 기본 구조만 형성 */
 CREATE TABLE "Action" (
-    action_id SERIAL PRIMARY KEY,
+    action_id BIGSERIAL PRIMARY KEY,
     disposal_date DATE,
     store_id VARCHAR NOT NULL,
     guide_date DATE,

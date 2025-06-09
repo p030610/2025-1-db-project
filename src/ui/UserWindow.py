@@ -17,9 +17,8 @@ class UserWindow(QMainWindow):
         self.db=db
 
     def init_tabs(self):
-        self.tabs.addTab(self.create_view_tab(), "처분내역 조회")
-        self.tabs.addTab(self.create_create_tab(), "처분사항 등록")
-        self.tabs.addTab(self.create_stats_tab(), "현황 통계")
+        self.tabs.addTab(self.create_view_tab(), "음식점 정보 조회")
+        self.tabs.addTab(self.create_create_tab(), "위생평가")
 
     def create_view_tab(self):
         tab = QWidget()

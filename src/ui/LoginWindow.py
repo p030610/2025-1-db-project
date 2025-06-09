@@ -31,6 +31,7 @@ class LoginWindow(QWidget):
         layout.addWidget(self.username_input)
         layout.addWidget(self.password_input)
         layout.addWidget(self.login_btn)
+        layout.addWidget(self.register_btn)
 
         self.setLayout(layout)
 

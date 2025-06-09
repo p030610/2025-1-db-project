@@ -23,7 +23,7 @@ class RegisterWindow(QWidget):
         self.password_input.setPlaceholderText("비밀번호")
 
         self.register_complete_btn = QPushButton("등록 마치기")
-        self.register_complete_btn.clicked.connect(self.register)
+        self.register_complete_btn.clicked.connect(self.add_new_user)
 
         layout.addWidget(self.username_input)
         layout.addWidget(self.password_input)
@@ -46,7 +46,7 @@ class RegisterWindow(QWidget):
 
             conn.close()
 
-            QMessageBox.information(self, "성공", f"가입 성공")
+            QMessageBox.information(self, "성공", f"가입 성공. 로그인 해주세요.")
             self.open_login_window()
 
         except Exception as e:
@@ -56,6 +56,7 @@ class RegisterWindow(QWidget):
         self.next = LoginWindow()
         self.next.show()
         self.close()
+    
 
         
         

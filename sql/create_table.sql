@@ -25,7 +25,8 @@ CREATE TABLE "UserEvaluation" (
     eval_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR,
     FOREIGN KEY (user_id) REFERENCES "User"(user_id),
-    FOREIGN KEY (store_id) REFERENCES "Restaurant"(manage_id)
+    FOREIGN KEY (store_id) REFERENCES "Restaurant"(manage_id),
+    UNIQUE (store_id, user_id)
 );
 
 /* 기본 구조만 형성 */

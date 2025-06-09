@@ -1,4 +1,6 @@
-#!/Users/allenpark/Desktop/아주대학교/2025-1-db-project/venv/bin/python3
+#!/bin/sh
+'''exec' "/Users/ieungjieut/Library/CloudStorage/Nextcloud-jjangyj8718@cloud.iezu.kr/아주대학교/2025년 1학기/데이터베이스 F058/과제물/팀 프로젝트/app/venv/bin/python3.13" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

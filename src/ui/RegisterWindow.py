@@ -40,25 +40,14 @@ class RegisterWindow(QWidget):
             cursor = conn.cursor()
 
             cursor.execute("""
-                SELECT user_id, role FROM "User"
-                WHERE username = %s AND password_hash = %s
+                INSERT INTO "User" (username, password_hash, role)
+                VALUES ('%s', '%s', 'user');
             """, (username, password))
 
-            result = cursor.fetchone()
             conn.close()
 
-            if result:
-                user_id, role = result
-                role_text=""
-                if role=="admin":
-                    role_text="관리자"
-                elif role=="user":
-                    role_text="일반 사용자"
-                    
-                QMessageBox.information(self, "성공", f"{role_text} 로그인 성공")
-                self.open_main_window(user_id, role)
-            else:
-                QMessageBox.warning(self, "실패", "아이디 또는 비밀번호가 틀렸습니다.")
+            QMessageBox.information(self, "성공", f"가입 성공")
+            self.open_login_window()
 
         except Exception as e:
             QMessageBox.critical(self, "오류", str(e))

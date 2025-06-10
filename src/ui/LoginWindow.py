@@ -2,10 +2,11 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget,
     QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QLabel, QLineEdit
 )
+from PyQt6.QtGui import QGuiApplication
 import psycopg2
-from UserWindow import UserWindow
-from ManagerWindow import ManagerWindow
-from RegisterWindow import RegisterWindow
+from ui.UserWindow import UserWindow
+from ui.ManagerWindow import ManagerWindow
+from ui.RegisterWindow import RegisterWindow
 from DB_CONFIG import DB_CONFIG
 
 class LoginWindow(QWidget):
@@ -69,19 +70,41 @@ class LoginWindow(QWidget):
 
     def register(self):
         self.register_window = RegisterWindow()
+        screen = QGuiApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+
+        # Calculate position to center the window
+        x = (screen_width - self.register_window.width()) // 2
+        y = (screen_height - self.register_window.height()) // 2
+        self.register_window.move(x,y)
         self.register_window.show()
         self.close()
 
     def open_main_window(self, user_id, role, user_type):
         if user_type=="admin":
             self.main = ManagerWindow(user_id, role)
-            self.main.show()
+            
             self.close()
 
         elif user_type=="user":
             self.main = UserWindow(user_id, role)
-            self.main.show()
             self.close()
+
+        screen = QGuiApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+
+        # Calculate position to center the window
+        x = (screen_width - self.main.width()) // 2
+        y = (screen_height - self.main.height()) // 2
+        self.main.move(x,y)
+
+        self.main.show()
 
         
         

@@ -2,10 +2,9 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget,
     QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QLabel, QLineEdit
 )
+from PyQt6.QtGui import QGuiApplication
 import psycopg2
-from UserWindow import UserWindow
-from ManagerWindow import ManagerWindow
-from LoginWindow import LoginWindow
+
 from DB_CONFIG import DB_CONFIG
 
 class RegisterWindow(QWidget):
@@ -41,9 +40,12 @@ class RegisterWindow(QWidget):
 
             cursor.execute("""
                 INSERT INTO "User" (username, password_hash, role)
-                VALUES ('%s', '%s', 'user');
+                VALUES (%s, %s, 'user');
             """, (username, password))
 
+            conn.commit()
+
+            cursor.close()
             conn.close()
 
             QMessageBox.information(self, "성공", f"가입 성공. 로그인 해주세요.")
@@ -53,7 +55,19 @@ class RegisterWindow(QWidget):
             QMessageBox.critical(self, "오류", str(e))
 
     def open_login_window(self):
+        from ui.LoginWindow import LoginWindow
         self.next = LoginWindow()
+        screen = QGuiApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+
+        # Calculate position to center the window
+        x = (screen_width - self.next.width()) // 2
+        y = (screen_height - self.next.height()) // 2
+
+        self.next.move(x, y)
         self.next.show()
         self.close()
     

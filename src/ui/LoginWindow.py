@@ -83,13 +83,13 @@ class LoginWindow(QWidget):
         self.register_window.show()
         self.close()
 
-    def open_main_window(self, user_id, role, user_type):
-        if user_type=="admin":
+    def open_main_window(self, user_id, role):
+        if role=="admin":
             self.main = ManagerWindow(user_id, role)
             
             self.close()
 
-        elif user_type=="user":
+        elif role=="user":
             self.main = UserWindow(user_id, role)
             self.close()
 

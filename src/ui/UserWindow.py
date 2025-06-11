@@ -1,11 +1,14 @@
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget,
-    QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QLabel, QLineEdit
+    QPushButton, QTableWidget, QTableWidgetItem, QHBoxLayout, QMessageBox, QLabel, QLineEdit, QMenu
 )
 from PyQt6.QtWidgets import QHeaderView
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QPoint
 import psycopg2
 from DB_CONFIG import DB_CONFIG
+from ui.ActionList import ActionList
+from ui.EvaluationForm import EvaluationForm
+from ui.ReviewList import ReviewList
 
 class UserWindow(QMainWindow):
     def __init__(self, user_id, role):
@@ -21,33 +24,32 @@ class UserWindow(QMainWindow):
         self.user_id=user_id
         self.role=role
 
+
+        self.table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.table.customContextMenuRequested.connect(self.show_context_menu)
+
     def init_tabs(self):
-        self.tabs.addTab(self.view_tab(), "음식점 정보 조회(음식점을 더블클릭해 리뷰를 확인하세요.)")
-        self.tabs.addTab(self.review_tab(), "위생평가하기")
+        self.tabs.addTab(self.view_tab(), "음식점 정보")
 
     def view_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
 
-        refresh_button = QPushButton("새로고침")
-        refresh_button.clicked.connect(self.load_data)
+        # refresh_button = QPushButton("새로고침")
+        # refresh_button.clicked.connect(self.load_data)
         self.load_data()  # Load once on tab creation
 
         search_input = QLineEdit()
         search_input.setPlaceholderText("검색어 입력 (음식점명)")
         search_input.textChanged.connect(self.filter_table)
-        layout.addWidget(QLabel("음식점 정보 조회"))
+        # layout.addWidget(QLabel("음식점 정보 조회"))
         
-        layout.addWidget(refresh_button)
         layout.addWidget(search_input)
+        # layout.addWidget(refresh_button)
         layout.addWidget(self.table)
-
         tab.setLayout(layout)   
 
         return tab
-    
-    def vie_review_popup(self):
-        pass
 
     def load_data(self):
         try:
@@ -64,7 +66,7 @@ class UserWindow(QMainWindow):
 
             self.table.setRowCount(len(rows))
             self.table.setColumnCount(len(headers))
-            self.table.setHorizontalHeaderLabels(["관리 고유번호","점포명","주소","허가일자","기존 점포명"])
+            self.table.setHorizontalHeaderLabels(["관리 고유번호","점포명","도로명 주소","허가일자","지번 주소"])
             self.table.horizontalHeader().setStretchLastSection(True)
             self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
@@ -85,11 +87,45 @@ class UserWindow(QMainWindow):
             self.table.setItem(0, 0, QTableWidgetItem(str(e)))
     
     def filter_table(self):
-        pass
+        search_text = self.sender().text().lower()  # Case-insensitive search
 
-    def review_tab(self):
-        tab = QWidget()
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("여기에 처분사항 등록 UI가 들어갑니다."))
-        tab.setLayout(layout)
-        return tab
+        for row in range(self.table.rowCount()):
+            item = self.table.item(row, 1)  # Column 1 = store_name
+            if item:
+                store_name = item.text().lower()
+                match = search_text in store_name
+                self.table.setRowHidden(row, not match)
+
+    def show_context_menu(self, pos: QPoint):
+        # Get global position
+        global_pos = self.table.viewport().mapToGlobal(pos)
+
+        # Get clicked row
+        item = self.table.itemAt(pos)
+        if item is None:
+            return  # Clicked outside any cell
+
+        row = item.row()
+
+        # Create popup menu
+        menu = QMenu(self)
+
+        action_review = menu.addAction("새 리뷰 작성")
+        action_detail = menu.addAction("처분내역 열람")
+        action_view_review=menu.addAction("작성된 리뷰 열람")
+
+        action = menu.exec(global_pos)
+
+        # Handle menu selection
+        storeid=self.table.item(row,0).text()
+        storename=self.table.item(row,1).text()
+        if action == action_review:
+            self.eval_form = EvaluationForm(self.user_id, storeid)
+            self.eval_form.show()
+
+        elif action == action_detail:
+            self.actionlist = ActionList(storename, storeid)
+            self.actionlist.show()
+        elif action == action_view_review:
+            self.review_list = ReviewList(storename, storeid)
+            self.review_list.show()

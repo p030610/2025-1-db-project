@@ -1,5 +1,6 @@
 import sys
 import psycopg2
+from DB_CONFIG import DB_CONFIG
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QLineEdit, QTextEdit, QComboBox,
     QPushButton, QFormLayout, QMessageBox
@@ -44,13 +45,7 @@ class EvaluationForm(QWidget):
         status = self.status_input.text()
 
         try:
-            conn = psycopg2.connect(
-                dbname="postgres",
-                user="",
-                password="",
-                host="localhost",
-                port="5433"
-            )
+            conn = psycopg2.connect(**DB_CONFIG)
             cur = conn.cursor()
 
             cur.execute("""

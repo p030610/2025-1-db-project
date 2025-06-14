@@ -57,7 +57,7 @@ class UserWindow(QMainWindow):
             cursor = conn.cursor()
 
             cursor.execute("""
-                SELECT manage_id, store_name, address, permission_date, legacy_name
+                SELECT manage_id, store_name, address, permission_date, legacy_address
                 FROM "Restaurant"
                 ORDER BY permission_date DESC
             """)
